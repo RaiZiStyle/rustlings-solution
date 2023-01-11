@@ -56,7 +56,7 @@ pub struct Exercise {
 
 // An enum to track of the state of an Exercise.
 // An Exercise can be either Done or Pending
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Eq, Debug)]
 pub enum State {
     // The state of the exercise once it's been completed
     Done,
@@ -65,7 +65,7 @@ pub enum State {
 }
 
 // The context information of a pending exercise
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Eq, Debug)]
 pub struct ContextLine {
     // The source code that is still pending completion
     pub line: String,
@@ -109,11 +109,11 @@ impl Exercise {
     pub fn compile(&self) -> Result<CompiledExercise, ExerciseOutput> {
         let cmd = match self.mode {
             Mode::Compile => Command::new("rustc")
-                .args(&[self.path.to_str().unwrap(), "-o", &temp_file()])
+                .args([self.path.to_str().unwrap(), "-o", &temp_file()])
                 .args(RUSTC_COLOR_ARGS)
                 .output(),
             Mode::Test => Command::new("rustc")
-                .args(&["--test", self.path.to_str().unwrap(), "-o", &temp_file()])
+                .args(["--test", self.path.to_str().unwrap(), "-o", &temp_file()])
                 .args(RUSTC_COLOR_ARGS)
                 .output(),
             Mode::Clippy => {
@@ -138,7 +138,7 @@ path = "{}.rs""#,
                 // compilation failure, this would silently fail. But we expect
                 // clippy to reflect the same failure while compiling later.
                 Command::new("rustc")
-                    .args(&[self.path.to_str().unwrap(), "-o", &temp_file()])
+                    .args([self.path.to_str().unwrap(), "-o", &temp_file()])
                     .args(RUSTC_COLOR_ARGS)
                     .output()
                     .expect("Failed to compile!");
@@ -147,14 +147,14 @@ path = "{}.rs""#,
                 // This is already fixed on Clippy's master branch. See this issue to track merging into Cargo:
                 // https://github.com/rust-lang/rust-clippy/issues/3837
                 Command::new("cargo")
-                    .args(&["clean", "--manifest-path", CLIPPY_CARGO_TOML_PATH])
+                    .args(["clean", "--manifest-path", CLIPPY_CARGO_TOML_PATH])
                     .args(RUSTC_COLOR_ARGS)
                     .output()
                     .expect("Failed to run 'cargo clean'");
                 Command::new("cargo")
-                    .args(&["clippy", "--manifest-path", CLIPPY_CARGO_TOML_PATH])
+                    .args(["clippy", "--manifest-path", CLIPPY_CARGO_TOML_PATH])
                     .args(RUSTC_COLOR_ARGS)
-                    .args(&["--", "-D", "warnings","-D","clippy::float_cmp"])
+                    .args(["--", "-D", "warnings","-D","clippy::float_cmp"])
                     .output()
             }
         }
