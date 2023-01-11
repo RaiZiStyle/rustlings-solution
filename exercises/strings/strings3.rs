@@ -9,19 +9,16 @@ fn trim_me(input: &str) -> String {
 
 fn compose_me(input: &str) -> String {
     // TODO: Add " world!" to the string! There's multiple ways to do this!
-    // ???
-    let mut new_string : String = String::new();
-    new_string.push_str(input);
+    let mut new_string : String = String::from(input);
     new_string.push_str(" world!");
     new_string
 }
 
 fn replace_me(input: &str) -> String {
     // TODO: Replace "cars" in the string with "balloons"!
-    let mut new_string : String = String::new();
-    new_string.push_str(input);
-    new_string.replace("cars", "balloons")
-    // new_string
+    let new_string = input.replace("cars" , "balloons");
+    // let mut new_string : String = String::from(input);
+    new_string.to_string()
 }
 
 #[cfg(test)]
